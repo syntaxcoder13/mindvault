@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    :root {
+      --bg-color: #0d0d0d;
+      --card-bg: #141414;
+      --accent-color: #8b5cf6;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --input-bg: #1f2937;
+      --border: 1px solid #333;
+    }
+    
+    body {
+      width: 380px;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    .container {
+      padding: 1.5rem;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 2rem;
+    }
+
+    .header img {
+      width: 28px;
+      height: 28px;
+    }
+
+    .header h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      letter-spacing: 0.1em;
+      color: var(--accent-color);
+      font-weight: 800;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    select, input, textarea {
+      width: 100%;
+      box-sizing: border-box;
+      background: var(--input-bg);
+      border: var(--border);
+      color: var(--text-main);
+      padding: 0.75rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    select:focus, input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 8px rgba(139, 92, 246, 0.3);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #7c3aed;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: var(--border);
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    .btn-secondary:hover {
+      background: #222;
+      color: var(--text-main);
+    }
+
+    .status-msg {
+      margin-top: 1rem;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      display: none;
+    }
+
+    .status-success {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+      border: 1px solid #10b981;
+      display: block;
+    }
+
+    .status-error {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      border: 1px solid #ef4444;
+      display: block;
+    }
+
+    .loader {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid #fff;
+      border-bottom-color: transparent;
+      border-radius: 50%;
+      animation: rotation 1s linear infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes rotation {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="icons/icon128.png" alt="MV">
+      <h2>MINDVAULT</h2>
+    </div>
+
+    <form id="saveForm">
+      <div class="form-group">
+        <label>Format</label>
+        <select id="type">
+          <option value="article">Article</option>
+          <option value="tweet">Tweet</option>
+          <option value="video">Video</option>
+          <option value="image">Image</option>
+          <option value="pdf">PDF</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>URL</label>
+        <input type="url" id="url" required readonly>
+      </div>
+
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="title" required>
+      </div>
+
+      <div class="form-group">
+        <label>Notes / Content</label>
+        <textarea id="content" rows="3" placeholder="Add some notes..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Tags (Comma Separated)</label>
+        <input type="text" id="tags" placeholder="design, tech, inspiration">
+      </div>
+
+      <button type="submit" id="saveBtn" class="btn btn-primary">Store in Vault</button>
+      <button type="button" id="extractBtn" class="btn btn-secondary">AI Extract Page Content</button>
+    </form>
+
+    <div id="status" class="status-msg"></div>
+  </div>
+  <script src="config.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

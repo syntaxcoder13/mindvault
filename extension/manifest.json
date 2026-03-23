@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "MindVault - Save Tool",
+  "version": "1.0",
+  "description": "Save everything from the web to your MindVault knowledge base with AI-powered tagging and search.",
+  "permissions": ["activeTab", "cookies", "tabs", "storage"],
+  "host_permissions": ["*://localhost/*"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "icons": {
+    "128": "icons/icon128.png"
+  }
+}

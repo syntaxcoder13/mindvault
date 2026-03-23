@@ -1,0 +1,28 @@
+# Node modules
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Database
+backend/mindvault.db
+backend/mindvault.db-shm
+backend/mindvault.db-wal
+
+# Build artifacts
+build/
+*.log
+
+# Extension build/zip (optional)
+extension/*.zip
+
+# OS files
+.DS_Store
+Thumbs.db
