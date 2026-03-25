@@ -12,7 +12,31 @@ export default function SaveModal({ onClose }) {
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const { saveItem } = useApi();
+  const { saveItem, extractMetadata } = useApi();
+  const [autofilling, setAutofilling] = useState(false);
+
+  const handleAutoFill = async () => {
+    if (!formData.url) {
+      alert("Please enter a URL first.");
+      return;
+    }
+    setAutofilling(true);
+    try {
+      const data = await extractMetadata(formData.url);
+      if (data) {
+        setFormData(prev => ({
+          ...prev,
+          title: data.title || prev.title,
+          content: data.content || prev.content
+        }));
+      }
+    } catch (err) {
+      console.error("Auto-fill error:", err);
+      alert("Failed to auto-fill metadata. Please enter manually.");
+    } finally {
+      setAutofilling(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,7 +74,7 @@ export default function SaveModal({ onClose }) {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content brutal-border" onClick={e => e.stopPropagation()}>
-        <button onClick={onClose} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', color: 'var(--text-muted)' }}>
+        <button onClick={onClose} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer' }}>
           <X size={24} />
         </button>
         <h2 style={{ marginBottom: '2.5rem', color: 'var(--accent-color)' }}>ADD KNOWLEDGE</h2>
@@ -73,13 +97,33 @@ export default function SaveModal({ onClose }) {
             
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <label className="meta-text" style={{ display: 'block', marginBottom: '0.75rem', color: 'var(--text-muted)' }}>SOURCE URL</label>
-              <input 
-                required
-                type="url" 
-                placeholder="https://..."
-                value={formData.url}
-                onChange={e => setFormData({...formData, url: e.target.value})}
-              />
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <input 
+                  required
+                  type="url" 
+                  placeholder="https://..."
+                  value={formData.url}
+                  onChange={e => setFormData({...formData, url: e.target.value})}
+                  style={{ flex: 1 }}
+                />
+                <button 
+                  type="button" 
+                  onClick={handleAutoFill} 
+                  disabled={autofilling}
+                  title="Auto-fill Metadata"
+                  style={{ 
+                    padding: '0 1rem', 
+                    background: 'var(--bg-accent)', 
+                    color: 'var(--accent-color)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                  }}
+                  className="brutal-border"
+                >
+                  {autofilling ? <span className="loading">...</span> : <Wand2 size={18} />}
+                </button>
+              </div>
             </div>
           </div>
 

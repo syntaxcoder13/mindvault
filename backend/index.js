@@ -71,20 +71,39 @@ app.post('/api/extract', async (req, res) => {
   if (!url) return res.status(400).json({ error: "No URL provided" });
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+      }
+    });
+
+    if (!response.ok) {
+      console.error(`[EXTRACT] Fetch failed for ${url}: ${response.status} ${response.statusText}`);
+      return res.status(400).json({ error: `Could not fetch page: ${response.status}` });
+    }
+
     const html = await response.text();
     const doc = new JSDOM(html, { url });
     const reader = new Readability(doc.window.document);
-    const article = reader.parse();
+    let article = reader.parse();
 
-    if (!article) return res.status(400).json({ error: "Could not read article content" });
+    if (!article) {
+       console.warn(`[EXTRACT] Readability failed for ${url}, trying fallback`);
+       // Fallback: Just try to get title and some content
+       const title = doc.window.document.title || "";
+       const firstP = doc.window.document.querySelector('p')?.textContent?.substring(0, 1000) || "";
+       if (!title && !firstP) {
+         return res.status(400).json({ error: "Could not read article content" });
+       }
+       article = { title, textContent: firstP };
+    }
 
     res.json({
       title: article.title || '',
       content: article.textContent ? article.textContent.trim().substring(0, 3000) : ''
     });
   } catch (err) {
-    console.error("Extraction error:", err);
+    console.error(`[EXTRACT] Error for ${url}:`, err);
     res.status(500).json({ error: "Failed to extract metadata from URL" });
   }
 });

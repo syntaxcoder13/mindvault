@@ -22,5 +22,6 @@ export function useApi() {
     fetchCollections: withToken(api.fetchCollections),
     createCollection: withToken(api.createCollection),
     fetchGraphData: withToken(api.fetchGraphData),
+    extractMetadata: withToken(api.extractMetadata),
   };
 }
