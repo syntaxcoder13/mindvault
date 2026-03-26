@@ -20,6 +20,13 @@
   --font-heading: 'Outfit', sans-serif;
   --font-body: 'Inter', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+
+  /* Legacy Utility Aliases */
+  --text-color: var(--text-primary);
+  --accent-color: var(--accent);
+  --bg-color: var(--bg-dark);
+  --border-color: var(--border);
+  --font-meta: var(--font-mono);
 }
 
 * {
@@ -106,6 +113,17 @@ h1, h2, h3, h4, h5 {
   transform: translateY(-4px);
   background: var(--bg-hover);
   box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+}
+
+.brutal-border {
+  border: 2px solid var(--border);
+  box-shadow: 4px 4px 0 var(--border);
+  transition: all 0.2s ease;
+}
+
+.brutal-border:hover {
+  border-color: var(--accent);
+  box-shadow: 6px 6px 0 var(--accent-glow);
 }
 
 /* Inputs */
