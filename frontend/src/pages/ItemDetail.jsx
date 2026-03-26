@@ -62,7 +62,11 @@ export default function ItemDetail() {
         <ChevronLeft size={16} /> Back to Vault
       </button>
 
-      <div className="detail-grid" style={{ gridTemplateColumns: '1fr 340px' }}>
+      <div className="detail-grid" style={{ 
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        gap: '2.5rem'
+      }}>
         {/* Left: Content */}
         <article className="glass-card" style={{ padding: '3.5rem', borderRadius: '24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>

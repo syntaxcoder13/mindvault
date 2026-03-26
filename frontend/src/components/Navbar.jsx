@@ -34,17 +34,17 @@ export default function Navbar() {
   return (
     <>
       <nav className="glass">
-        <Link to="/" style={{ letterSpacing: '-0.02em', fontFamily: 'var(--font-heading)', fontSize: '1.4rem', fontWeight: 'bold', textDecoration: 'none', color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div style={{ width: 12, height: 12, backgroundColor: 'var(--accent)', borderRadius: '50%', boxShadow: '0 0 10px var(--accent-glow)' }} />
-          MINDVAULT
+        <Link to="/" style={{ letterSpacing: '-0.02em', fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 'bold', textDecoration: 'none', color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ width: 14, height: 14, backgroundColor: 'var(--accent)', borderRadius: '50%', boxShadow: '0 0 10px var(--accent-glow)', flexShrink: 0 }} />
+          <span className="hide-on-mobile" style={{ fontSize: '1.2rem' }}>MINDVAULT</span>
         </Link>
         
         <SignedIn>
-          <div className="search-wrapper" style={{ flex: 1, maxWidth: '500px', margin: '0 2.5rem' }}>
+          <div className="search-wrapper" style={{ flex: 1, maxWidth: '450px', margin: '0 2rem' }}>
             <Search size={18} className="icon" />
             <input 
               type="text" 
-              placeholder="Search your mind..." 
+              placeholder="Search library..." 
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
@@ -55,22 +55,22 @@ export default function Navbar() {
           <div style={{ flex: 1 }} />
         </SignedOut>
 
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
           <SignedIn>
-            <Link to="/timeline" className="btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '0.5rem 1rem' }}>
+            <Link to="/timeline" className="btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '0.5rem 0.75rem' }}>
               <Clock size={16} /> <span className="hide-on-mobile">Timeline</span>
             </Link>
-            <Link to="/graph" className="btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '0.5rem 1rem' }}>
+            <Link to="/graph" className="btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '0.5rem 0.75rem' }}>
               <Layers size={16} /> <span className="hide-on-mobile">Graph</span>
             </Link>
-            <button onClick={() => setShowModal(true)} className="btn-primary">
-              <Plus size={18} strokeWidth={2.5} /> <span className="hide-on-mobile">SAVE</span>
+            <button onClick={() => setShowModal(true)} className="btn-primary" style={{ padding: '0.5rem 1rem' }}>
+              <Plus size={18} strokeWidth={2.5} /> <span className="hide-on-mobile">CAPTURE</span>
             </button>
-            <div style={{ marginLeft: '0.5rem' }}>
+            <div style={{ marginLeft: '0.25rem' }}>
               <UserButton 
                 appearance={{
                   elements: {
-                    userButtonAvatarBox: { width: 38, height: 38, border: '2px solid var(--border)' }
+                    userButtonAvatarBox: { width: 36, height: 36, border: '1.5px solid var(--border)' }
                   }
                 }}
               />
