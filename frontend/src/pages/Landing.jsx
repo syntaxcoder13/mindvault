@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import { SignInButton } from '@clerk/clerk-react';
-import { Database, Zap, Search, Layout, Sparkles, Network, ArrowRight } from 'lucide-react';
+import { Database, Zap, Search, Layout, Sparkles, Network, ArrowRight, Play } from 'lucide-react';
+import HowToUseModal from '../components/HowToUseModal';
 
 export default function Landing() {
+  const [showHowToUse, setShowHowToUse] = useState(false);
   return (
     <div className="landing-container" style={{ 
       minHeight: '85vh', 
@@ -71,14 +74,52 @@ export default function Landing() {
           that understands your thoughts using vector-semantic search.
         </p>
         
-        <div style={{ display: 'flex', justifyContent: 'center', padding: '0 1rem' }}>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          gap: '1.5rem', 
+          padding: '0 1rem',
+          flexWrap: 'wrap'
+        }}>
           <SignInButton mode="modal">
-            <button className="btn-primary" style={{ padding: '1.2rem 3.5rem', fontSize: '1.2rem', borderRadius: '50px', minWidth: '280px', boxShadow: '0 20px 40px -10px var(--accent-glow)' }}>
+            <button className="btn-primary" style={{ 
+              padding: '1.2rem 3.5rem', 
+              fontSize: '1.2rem', 
+              borderRadius: '50px', 
+              minWidth: '280px', 
+              boxShadow: '0 20px 40px -10px var(--accent-glow)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '12px'
+            }}>
               GET STARTED <ArrowRight size={22} />
             </button>
           </SignInButton>
+
+          <button 
+            onClick={() => setShowHowToUse(true)}
+            className="btn-outline" 
+            style={{ 
+              padding: '1.2rem 3.5rem', 
+              fontSize: '1.2rem', 
+              borderRadius: '50px', 
+              minWidth: '280px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '12px',
+              background: 'rgba(255,255,255,0.03)',
+              border: '1px solid var(--border-active)'
+            }}
+          >
+            HOW TO USE <Play size={22} fill="var(--accent)" color="var(--accent)" />
+          </button>
         </div>
       </div>
+
+      {showHowToUse && <HowToUseModal onClose={() => setShowHowToUse(false)} />}
 
       <div style={{ 
         display: 'grid', 
