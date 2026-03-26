@@ -1,5 +1,4 @@
 export default function TagCloud({ items, selectedTag, onSelect }) {
-  // Extract and count tags
   const tagsMap = {};
   items.forEach(item => {
     if (item.tags && Array.isArray(item.tags)) {
@@ -12,26 +11,53 @@ export default function TagCloud({ items, selectedTag, onSelect }) {
   const sortedTags = Object.entries(tagsMap).sort((a,b) => b[1] - a[1]);
 
   return (
-    <div style={{ padding: '2rem 0' }}>
-      <h3 className="meta-text">TAG CLOUD</h3>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
-        {sortedTags.length === 0 && <span className="meta-text" style={{ color: 'var(--text-muted)'}}>No tags yet.</span>}
-        {sortedTags.map(([tag, count]) => (
-          <button 
-            key={tag}
-            onClick={() => onSelect(tag === selectedTag ? '' : tag)}
-            className="tag-badge"
-            style={{
-              padding: '0.3rem 0.6rem',
-              backgroundColor: tag === selectedTag ? 'var(--text-color)' : 'transparent',
-              color: tag === selectedTag ? 'var(--bg-color)' : 'var(--text-muted)',
-              cursor: 'pointer',
-              border: tag === selectedTag ? 'none' : '1px solid var(--border-color)',
-            }}
-          >
-            {tag} <span style={{ opacity: 0.6, fontSize: '0.85em', marginLeft: '0.3rem' }}>{count}</span>
-          </button>
-        ))}
+    <div style={{ marginTop: '0.5rem' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+        {sortedTags.length === 0 && <span className="meta-text" style={{ fontSize: '0.7rem' }}>No tags available.</span>}
+        {sortedTags.map(([tag, count]) => {
+          const isActive = tag === selectedTag;
+          return (
+            <button 
+              key={tag}
+              onClick={() => onSelect(isActive ? '' : tag)}
+              style={{
+                padding: '0.4rem 0.8rem',
+                borderRadius: '50px',
+                fontSize: '0.75rem',
+                fontWeight: 500,
+                cursor: 'pointer',
+                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                backgroundColor: isActive ? 'var(--accent)' : 'rgba(255,255,255,0.03)',
+                color: isActive ? '#fff' : 'var(--text-secondary)',
+                border: isActive ? '1px solid var(--accent)' : '1px solid var(--border)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+              onMouseEnter={e => {
+                if(!isActive) {
+                  e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.08)';
+                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)';
+                }
+              }}
+              onMouseLeave={e => {
+                if(!isActive) {
+                  e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.03)';
+                  e.currentTarget.style.borderColor = 'var(--border)';
+                }
+              }}
+            >
+              #{tag} 
+              <span style={{ 
+                opacity: 0.5, 
+                fontSize: '0.8em', 
+                backgroundColor: isActive ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.05)',
+                padding: '0.1rem 0.4rem',
+                borderRadius: '10px'
+              }}>{count}</span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );

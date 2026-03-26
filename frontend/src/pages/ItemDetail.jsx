@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useApi } from '../hooks/useApi';
 import ItemCard from '../components/ItemCard';
 import EditModal from '../components/EditModal';
-import { ExternalLink, Hash, Trash2, Edit3 } from 'lucide-react';
+import { ExternalLink, Hash, Trash2, Edit3, MessageSquare, ChevronLeft, Calendar, Loader2, Sparkles } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -47,89 +47,102 @@ export default function ItemDetail() {
     }
   };
 
-  if (!item) return <div className="loading" style={{ margin: '4rem auto', textAlign: 'center' }}>LOADING KNOWLEDGE...</div>;
+  if (!item) return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: '1rem' }}>
+       <Loader2 size={40} className="spin" color="var(--accent)" />
+       <div className="meta-text">Accessing Vault...</div>
+       <style>{`.spin { animation: rotate 1s linear infinite; } @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
+    </div>
+  );
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '4rem' }}>
-      <div className="detail-grid">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', maxWidth: '1200px', margin: '0 auto' }}>
+      {/* Back Link */}
+      <button onClick={() => navigate(-1)} className="btn-outline" style={{ width: 'fit-content', border: 'none', background: 'rgba(255,255,255,0.03)', display: 'flex', alignItems: 'center', gap: '8px', padding: '0.5rem 1rem' }}>
+        <ChevronLeft size={16} /> Back to Vault
+      </button>
+
+      <div className="detail-grid" style={{ gridTemplateColumns: '1fr 340px' }}>
         {/* Left: Content */}
-        <article className="article-content">
-          <div className="meta-text" style={{ marginBottom: '1.5rem', color: 'var(--text-muted)' }}>
-             <span style={{ color: 'var(--accent-color)' }}>{item.type}</span> 
-             <span style={{ margin: '0 0.5rem' }}>/</span> 
-             {new Date(item.createdAt).toLocaleString()}
+        <article className="glass-card" style={{ padding: '3.5rem', borderRadius: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+            <span className="tag-badge" style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>{item.type}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+              <Calendar size={14} />
+              {new Date(item.createdAt).toLocaleDateString('en-US', { dateStyle: 'long' })}
+            </div>
           </div>
           
-          <h1 style={{ fontSize: '3.5rem', marginBottom: '1.5rem', lineHeight: 1.15, textWrap: 'balance' }}>
+          <h1 style={{ fontSize: '3rem', marginBottom: '2rem', lineHeight: 1.1, fontWeight: 700, letterSpacing: '-0.03em' }}>
             {item.title}
           </h1>
           
           {item.url && (
-            <a href={item.url} target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: 'var(--accent-color)', marginBottom: '3rem', fontSize: '1.1rem', borderBottom: '1px solid transparent' }} onMouseEnter={e => e.target.style.borderBottomColor='var(--accent-color)'} onMouseLeave={e => e.target.style.borderBottomColor='transparent'}>
-              View Original Source <ExternalLink size={16} />
+            <a href={item.url} target="_blank" rel="noreferrer" className="btn-primary" style={{ width: 'fit-content', marginBottom: '3rem', borderRadius: '50px', padding: '0.8rem 1.5rem', textDecoration: 'none' }}>
+              View Source <ExternalLink size={16} />
             </a>
           )}
           
-          <div className="markdown-body">
+          <div className="markdown-body" style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: 1.8 }}>
             {item.content ? (
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {item.content}
               </ReactMarkdown>
             ) : (
-              <span style={{ opacity: 0.5, fontStyle: 'italic' }}>No content provided.</span>
+              <div style={{ padding: '2rem', borderRadius: '12px', background: 'rgba(255,255,255,0.02)', textAlign: 'center', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                No textual content was captured for this item.
+              </div>
             )}
           </div>
         </article>
 
-        {/* Right: Metadata + Highlights */}
-        <aside style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
-          <div className="brutal-border" style={{ padding: '2rem', background: 'var(--bg-secondary)' }}>
-            <h3 className="meta-text" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem' }}>
-              <Hash size={16} /> TAGS
+        {/* Right: Sidebar Metadata */}
+        <aside style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+          <div className="glass-card" style={{ padding: '1.5rem', borderRadius: '20px' }}>
+            <h3 className="meta-text" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem', color: 'var(--text-primary)' }}>
+              <Hash size={16} color="var(--accent)" /> TAGS
             </h3>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-              {item.tags?.length === 0 && <span className="meta-text" style={{ color: 'var(--text-muted)' }}>No tags generated.</span>}
+              {item.tags?.length === 0 && <span className="meta-text" style={{ fontSize: '0.7rem' }}>No tags assigned.</span>}
               {item.tags?.map(t => (
                 <span key={t} className="tag-badge">#{t}</span>
               ))}
             </div>
           </div>
 
-          <div className="brutal-border" style={{ padding: '2rem', background: 'var(--bg-secondary)' }}>
-            <h3 className="meta-text" style={{ marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem' }}>HIGHLIGHTS</h3>
+          <div className="glass-card" style={{ padding: '1.5rem', borderRadius: '20px' }}>
+            <h3 className="meta-text" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem', color: 'var(--text-primary)' }}>
+              <MessageSquare size={16} color="var(--accent)" /> HIGHLIGHTS
+            </h3>
             
-            <ul style={{ paddingLeft: '1rem', marginBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              {item.highlights?.length === 0 && <span className="meta-text" style={{ color: 'var(--text-muted)', marginLeft: '-1rem' }}>No highlights saved.</span>}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem' }}>
+              {item.highlights?.length === 0 && <span className="meta-text" style={{ fontSize: '0.7rem' }}>No highlights saved.</span>}
               {item.highlights?.map((h, i) => (
-                 <li key={i} style={{ borderLeft: '2px solid var(--accent-color)', paddingLeft: '1.25rem', listStyle: 'none', marginLeft: '-1rem', color: '#E0E0E0', fontSize: '1.05rem', lineHeight: 1.6 }}>
+                 <div key={i} style={{ padding: '1rem', borderRadius: '12px', background: 'rgba(124, 58, 237, 0.05)', borderLeft: '3px solid var(--accent)', color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.5 }}>
                    "{h}"
-                 </li>
+                 </div>
               ))}
-            </ul>
+            </div>
             
             <form onSubmit={handleAddHighlight}>
               <textarea 
-                placeholder="Add new highlight or thought..." 
+                placeholder="Capture a thought..." 
                 rows="3" 
                 value={highlightText}
                 onChange={e => setHighlightText(e.target.value)}
-                style={{ marginBottom: '1rem', background: 'var(--bg-color)' }}
+                style={{ width: '100%', marginBottom: '0.75rem', fontSize: '0.85rem' }}
               />
-              <button className="btn-primary" style={{ width: '100%', padding: '0.75rem' }}>+ SAVE HIGHLIGHT</button>
+              <button className="btn-primary" style={{ width: '100%', padding: '0.6rem', fontSize: '0.85rem', justifyContent: 'center' }}>+ SAVE</button>
             </form>
           </div>
 
           <div style={{ display: 'flex', gap: '1rem' }}>
-            <div className="brutal-border" style={{ flex: 1, padding: '1rem 0.5rem', background: '#0F1A0F', borderColor: '#1F3A1F', transition: 'background 0.2s', cursor: 'pointer', display: 'flex', justifyContent: 'center' }} onClick={() => setIsEditing(true)} onMouseEnter={e => e.currentTarget.style.background = '#1A2A1A'} onMouseLeave={e => e.currentTarget.style.background = '#0F1A0F'}>
-              <button style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#5FE82A', fontSize: '0.95rem', fontWeight: 'bold' }}>
-                <Edit3 size={16} /> EDIT
-              </button>
-            </div>
-            <div className="brutal-border" style={{ flex: 1, padding: '1rem 0.5rem', background: '#150606', borderColor: '#4A0505', transition: 'background 0.2s', cursor: 'pointer', display: 'flex', justifyContent: 'center' }} onClick={handleDelete} onMouseEnter={e => e.currentTarget.style.background = '#260606'} onMouseLeave={e => e.currentTarget.style.background = '#150606'}>
-              <button style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#E82A2A', fontSize: '0.95rem', fontWeight: 'bold' }}>
-                <Trash2 size={16} /> DELETE
-              </button>
-            </div>
+            <button onClick={() => setIsEditing(true)} className="btn-outline" style={{ flex: 1, display: 'flex', justifyContent: 'center', gap: '8px', padding: '0.8rem' }}>
+               <Edit3 size={16} /> Edit
+            </button>
+            <button onClick={handleDelete} className="btn-outline" style={{ flex: 1, display: 'flex', justifyContent: 'center', gap: '8px', padding: '0.8rem', color: '#ff4444', borderColor: 'rgba(255, 68, 68, 0.2)' }}>
+               <Trash2 size={16} /> Delete
+            </button>
           </div>
         </aside>
       </div>
@@ -137,12 +150,14 @@ export default function ItemDetail() {
       {isEditing && <EditModal item={item} onClose={() => setIsEditing(false)} />}
 
       {/* Related items row */}
-      <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '3rem' }}>
-        <h3 className="meta-text" style={{ marginBottom: '2rem', fontSize: '1rem', letterSpacing: '0.1em' }}>RELATED KNOWLEDGE</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem' }}>
+      <div style={{ marginTop: '2rem' }}>
+        <h3 className="meta-text" style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Sparkles size={16} color="var(--accent)" /> RELATED KNOWLEDGE
+        </h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '1.5rem' }}>
           {related.length === 0 ? (
-            <div className="brutal-border" style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-               Embeddings calculating or no related items found.
+            <div className="glass-card" style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--text-muted)', width: '100%', gridColumn: '1 / -1', borderStyle: 'dashed' }}>
+               No related items found yet.
             </div>
           ) : related.map(rel => (
             <ItemCard key={rel.id} item={rel} />

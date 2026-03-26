@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useApi } from '../hooks/useApi';
-import { X, Wand2 } from 'lucide-react';
+import { X, Wand2, CheckCircle2, Loader2, Link2 } from 'lucide-react';
 
 export default function SaveModal({ onClose }) {
   const [formData, setFormData] = useState({
@@ -17,7 +17,6 @@ export default function SaveModal({ onClose }) {
 
   const handleAutoFill = async () => {
     if (!formData.url) {
-      alert("Please enter a URL first.");
       return;
     }
     setAutofilling(true);
@@ -32,7 +31,6 @@ export default function SaveModal({ onClose }) {
       }
     } catch (err) {
       console.error("Auto-fill error:", err);
-      alert("Failed to auto-fill metadata. Please enter manually.");
     } finally {
       setAutofilling(false);
     }
@@ -62,41 +60,52 @@ export default function SaveModal({ onClose }) {
 
   if (success) {
     return (
-      <div className="modal-overlay">
-        <div className="modal-content brutal-border" style={{ textAlign: 'center', borderColor: 'var(--accent-color)', padding: '4rem' }}>
-          <h2 style={{ color: 'var(--accent-color)', fontSize: '2rem', letterSpacing: '0.05em' }}>VAULTED.</h2>
-          <p className="meta-text" style={{ marginTop: '1.5rem', opacity: 0.7 }}>Processing AI tags & embeddings...</p>
+      <div className="modal-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="modal-content" style={{ textAlign: 'center', padding: '4rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}>
+          <div style={{ padding: '1rem', borderRadius: '50%', background: 'rgba(124, 58, 237, 0.1)', color: 'var(--accent)' }}>
+            <CheckCircle2 size={48} />
+          </div>
+          <div>
+            <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Stored in Vault.</h2>
+            <p className="meta-text" style={{ color: 'var(--text-secondary)' }}>Processing AI tags & embeddings...</p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content brutal-border" onClick={e => e.stopPropagation()}>
-        <button onClick={onClose} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer' }}>
-          <X size={24} />
+    <div className="modal-overlay" onClick={onClose} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div className="modal-content" onClick={e => e.stopPropagation()} style={{ width: '600px', maxWidth: '95vw', padding: '3rem', position: 'relative' }}>
+        <button onClick={onClose} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)', borderRadius: '50%', padding: '0.5rem', border: 'none', cursor: 'pointer', transition: 'all 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = '#fff'}>
+          <X size={20} />
         </button>
-        <h2 style={{ marginBottom: '2.5rem', color: 'var(--accent-color)' }}>ADD KNOWLEDGE</h2>
+        
+        <div style={{ marginBottom: '2.5rem' }}>
+          <h2 style={{ fontSize: '1.8rem', marginBottom: '0.5rem' }}>Add Knowledge</h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Capture an article, tweet, or video to your knowledge base.</p>
+        </div>
         
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
             <div>
-              <label className="meta-text" style={{ display: 'block', marginBottom: '0.75rem', color: 'var(--text-muted)' }}>FORMAT</label>
+              <label className="meta-text" style={{ display: 'block', marginBottom: '0.5rem' }}>Type</label>
               <select 
                 value={formData.type} 
                 onChange={e => setFormData({...formData, type: e.target.value})}
+                style={{ width: '100%', padding: '0.8rem', borderRadius: '12px' }}
               >
-                <option value="article">Article</option>
-                <option value="tweet">Tweet</option>
-                <option value="video">Video</option>
-                <option value="image">Image</option>
-                <option value="pdf">PDF</option>
+                <option value="article">📄 Article</option>
+                <option value="tweet">🐦 Tweet</option>
+                <option value="video">🎬 Video</option>
+                <option value="image">🖼️ Image</option>
+                <option value="pdf">📕 PDF</option>
+                <option value="link">🔗 Link</option>
               </select>
             </div>
             
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <label className="meta-text" style={{ display: 'block', marginBottom: '0.75rem', color: 'var(--text-muted)' }}>SOURCE URL</label>
+            <div>
+              <label className="meta-text" style={{ display: 'block', marginBottom: '0.5rem' }}>Source URL</label>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <input 
                   required
@@ -109,61 +118,68 @@ export default function SaveModal({ onClose }) {
                 <button 
                   type="button" 
                   onClick={handleAutoFill} 
-                  disabled={autofilling}
-                  title="Auto-fill Metadata"
+                  disabled={autofilling || !formData.url}
+                  className="btn-outline"
                   style={{ 
                     padding: '0 1rem', 
-                    background: 'var(--bg-accent)', 
-                    color: 'var(--accent-color)',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.5rem'
+                    justifyContent: 'center',
+                    minWidth: '48px',
+                    borderColor: formData.url ? 'var(--accent)' : 'var(--border)',
+                    color: formData.url ? 'var(--accent)' : 'var(--text-muted)'
                   }}
-                  className="brutal-border"
                 >
-                  {autofilling ? <span className="loading">...</span> : <Wand2 size={18} />}
+                  {autofilling ? <Loader2 size={18} className="spin" /> : <Wand2 size={18} />}
                 </button>
               </div>
             </div>
           </div>
 
           <div>
-            <label className="meta-text" style={{ display: 'block', marginBottom: '0.75rem', color: 'var(--text-muted)' }}>TITLE (REQUIRED)</label>
+            <label className="meta-text" style={{ display: 'block', marginBottom: '0.5rem' }}>Title</label>
             <input 
               required
               type="text" 
-              placeholder="e.g. The Architecture of Tomorrow"
+              placeholder="The future of decentralized knowledge..."
               value={formData.title}
               onChange={e => setFormData({...formData, title: e.target.value})}
+              style={{ width: '100%' }}
             />
           </div>
 
           <div>
-            <label className="meta-text" style={{ display: 'block', marginBottom: '0.75rem', color: 'var(--text-muted)' }}>CONTENT / NOTES</label>
+            <label className="meta-text" style={{ display: 'block', marginBottom: '0.5rem' }}>Content / Notes</label>
             <textarea 
               rows="4"
-              placeholder="Paste content for vector embeddings..."
+              placeholder="Paste relevant text here for full-text search and AI embeddings..."
               value={formData.content}
               onChange={e => setFormData({...formData, content: e.target.value})}
-              style={{ resize: 'vertical' }}
+              style={{ width: '100%', resize: 'none' }}
             />
           </div>
 
           <div>
-            <label className="meta-text" style={{ display: 'block', marginBottom: '0.75rem', color: 'var(--text-muted)' }}>MANUAL TAGS (COMMA SEPARATED)</label>
+            <label className="meta-text" style={{ display: 'block', marginBottom: '0.5rem' }}>Tags (comma separated)</label>
             <input 
               type="text" 
-              placeholder="design, tech, philosophy..."
+              placeholder="design, tech, neural-networks..."
               value={formData.tags}
               onChange={e => setFormData({...formData, tags: e.target.value})}
+              style={{ width: '100%' }}
             />
           </div>
 
-          <button type="submit" disabled={loading} className="btn-primary" style={{ marginTop: '1.5rem', padding: '1rem', fontSize: '1.1rem' }}>
-             {loading ? <span className="loading">SAVING...</span> : 'STORE IN VAULT'}
+          <button type="submit" disabled={loading} className="btn-primary" style={{ marginTop: '1rem', width: '100%', justifyContent: 'center', padding: '1rem' }}>
+             {loading ? <Loader2 size={20} className="spin" /> : 'SECURE IN VAULT'}
           </button>
         </form>
       </div>
+      
+      <style>{`
+        .spin { animation: rotate 1s linear infinite; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+      `}</style>
     </div>
   );
 }

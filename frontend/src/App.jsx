@@ -12,7 +12,7 @@ function App() {
     <Router>
       <div className="app-container">
         <Navbar />
-        <main className="main-content" style={{ marginTop: '2rem' }}>
+        <main className="main-content">
           <Routes>
             <Route 
               path="/" 

@@ -1,81 +1,112 @@
 import { SignInButton } from '@clerk/clerk-react';
-import { Database, Zap, Search, Layout } from 'lucide-react';
+import { Database, Zap, Search, Layout, Sparkles, Network, ArrowRight } from 'lucide-react';
 
 export default function Landing() {
   return (
     <div className="landing-container" style={{ 
-      minHeight: '80vh', 
+      minHeight: '85vh', 
       display: 'flex', 
       flexDirection: 'column', 
       alignItems: 'center', 
       justifyContent: 'center',
       textAlign: 'center',
-      padding: '2rem'
+      padding: '4rem 2rem'
     }}>
-      {/* Hero Section */}
-      <div style={{ marginBottom: '4rem' }}>
+      {/* Background Glow */}
+      <div style={{ 
+        position: 'absolute', 
+        top: '20%', 
+        left: '50%', 
+        transform: 'translateX(-50%)', 
+        width: '600px', 
+        height: '600px', 
+        background: 'radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%)', 
+        zIndex: -1,
+        borderRadius: '50%',
+        filter: 'blur(100px)'
+      }} />
+
+      <div style={{ marginBottom: '5rem', position: 'relative' }}>
+        <div style={{ 
+          display: 'inline-flex', 
+          alignItems: 'center', 
+          gap: '8px', 
+          padding: '0.4rem 1.2rem', 
+          borderRadius: '50px', 
+          background: 'rgba(124,58,237,0.1)', 
+          border: '1px solid rgba(124,58,237,0.2)', 
+          color: 'var(--accent)', 
+          fontSize: '0.85rem', 
+          fontWeight: 600,
+          marginBottom: '2rem'
+        }}>
+          <Sparkles size={14} /> NEW: Vector Search Enabled
+        </div>
+
         <h1 style={{ 
-          fontSize: '5rem', 
-          fontWeight: '900', 
-          letterSpacing: '-0.02em', 
-          lineHeight: 1, 
-          background: 'linear-gradient(135deg, var(--accent-color) 0%, #FFD700 100%)',
+          fontSize: 'clamp(3rem, 8vw, 6.5rem)', 
+          fontWeight: '700', 
+          letterSpacing: '-0.04em', 
+          lineHeight: 0.9, 
+          background: 'linear-gradient(to bottom right, #fff 40%, #71717a 100%)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
-          marginBottom: '1.5rem'
+          marginBottom: '2rem',
+          maxWidth: '1000px'
         }}>
-          MINDVAULT.
+          Capture Everything. <br /> Find it Instantly.
         </h1>
+        
         <p style={{ 
-          fontSize: '1.5rem', 
-          color: 'var(--text-muted)', 
-          maxWidth: '700px', 
+          fontSize: 'clamp(1rem, 2vw, 1.4rem)', 
+          color: 'var(--text-secondary)', 
+          maxWidth: '750px', 
           margin: '0 auto 3rem',
-          lineHeight: 1.6
+          lineHeight: 1.6,
+          fontWeight: 400
         }}>
           Not just another bookmark manager. A high-performance personal knowledge engine 
           that understands your thoughts using vector-semantic search.
         </p>
         
-        <SignInButton mode="modal">
-          <button className="btn-primary" style={{ padding: '1rem 3rem', fontSize: '1.2rem', fontWeight: 'bold' }}>
-            GET STARTED FOR FREE
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <SignInButton mode="modal">
+            <button className="btn-primary" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', borderRadius: '50px' }}>
+              GET STARTED <ArrowRight size={18} />
+            </button>
+          </SignInButton>
+          <button className="btn-outline" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', borderRadius: '50px', backdropFilter: 'blur(10px)' }}>
+            WATCH DEMO
           </button>
-        </SignInButton>
+        </div>
       </div>
 
-      {/* Features Grid */}
       <div style={{ 
         display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
         gap: '2rem', 
         maxWidth: '1200px', 
         width: '100%',
-        marginTop: '4rem'
+        marginTop: '2rem'
       }}>
         <FeatureCard 
-          icon={<Zap color="var(--accent-color)" />} 
+          icon={<Zap size={32} color="var(--accent)" />} 
           title="Instant Recall" 
           desc="AI-powered vector embeddings enable semantic search that finds what you mean, not just what you typed."
         />
         <FeatureCard 
-          icon={<Database color="var(--accent-color)" />} 
+          icon={<Network size={32} color="var(--accent)" />} 
           title="Knowledge Graph" 
           desc="Visualize connections between your saved items and watch your digital garden grow."
         />
         <FeatureCard 
-          icon={<Search color="var(--accent-color)" />} 
+          icon={<Search size={32} color="var(--accent)" />} 
           title="Auto-Metadata" 
           desc="Automatically extracts titles, summaries, and descriptions from URLs so you don't have to."
         />
-        <FeatureCard 
-          icon={<Layout color="var(--accent-color)" />} 
-          title="Brutal Minimalism" 
-          desc="A high-contrast, distraction-free interface built for speed and clarity."
-        />
       </div>
 
-      <footer style={{ marginTop: '8rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+      <footer style={{ marginTop: '8rem', color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '2rem' }}>
         © 2026 MINDVAULT. NO DATA SOLD. NO ADS. EVER.
       </footer>
     </div>
@@ -84,16 +115,26 @@ export default function Landing() {
 
 function FeatureCard({ icon, title, desc }) {
   return (
-    <div className="brutal-border" style={{ 
-      padding: '2rem', 
+    <div className="glass-card" style={{ 
+      padding: '2.5rem', 
       textAlign: 'left', 
-      background: 'var(--bg-secondary)',
-      transition: 'transform 0.2s',
-      cursor: 'default'
-    }} onMouseEnter={e => e.currentTarget.style.transform = 'translate(-4px, -4px)'} onMouseLeave={e => e.currentTarget.style.transform = 'none'}>
-      <div style={{ marginBottom: '1.5rem' }}>{icon}</div>
-      <h3 style={{ marginBottom: '1rem', letterSpacing: '0.05em' }}>{title.toUpperCase()}</h3>
-      <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.5 }}>{desc}</p>
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '1.25rem'
+    }}>
+      <div style={{ 
+        width: '64px',
+        height: '64px',
+        borderRadius: '16px',
+        background: 'rgba(124,58,237,0.1)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>{icon}</div>
+      <div>
+        <h3 style={{ marginBottom: '0.75rem', fontSize: '1.4rem' }}>{title}</h3>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: 1.6 }}>{desc}</p>
+      </div>
     </div>
   );
 }

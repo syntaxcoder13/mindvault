@@ -1,25 +1,30 @@
 import { useNavigate } from 'react-router-dom';
 import { useApi } from '../hooks/useApi';
-import { Pin } from 'lucide-react';
+import { Pin, ExternalLink } from 'lucide-react';
 
 const TYPE_ICONS = {
   article: '📄',
   video: '🎬',
   tweet: '🐦',
   pdf: '📕',
-  image: '🖼️'
+  image: '🖼️',
+  link: '🔗'
 };
 
 export default function ItemCard({ item }) {
   const navigate = useNavigate();
   const { togglePin } = useApi();
-  const date = new Date(item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  const date = new Date(item.createdAt).toLocaleDateString('en-US', { 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric' 
+  });
 
   const handlePin = async (e) => {
-    e.stopPropagation(); // prevent navigating to detail page
+    e.stopPropagation();
     try {
       await togglePin(item.id);
-      window.location.reload(); // super easy refresh since state holds in Dashboard
+      window.location.reload(); 
     } catch(err) {
       console.error(err);
     }
@@ -29,70 +34,91 @@ export default function ItemCard({ item }) {
 
   return (
     <div 
-      className="item-card brutal-border" 
+      className="item-card glass-card"
       onClick={() => navigate(`/item/${item.id}`)}
       style={{ 
-         display: 'flex', flexDirection: 'column', gap: '1rem', 
+         padding: '1.25rem',
+         display: 'flex', 
+         flexDirection: 'column', 
+         gap: '1rem', 
          position: 'relative',
-         borderColor: isPinned ? 'var(--accent-color)' : 'var(--border-color)',
-         boxShadow: isPinned ? '4px 4px 0 rgba(245, 166, 35, 0.15)' : 'none'
+         borderLeft: isPinned ? '4px solid var(--accent)' : '1px solid var(--border)'
       }}
     >
-      {isPinned ? (
-         <div style={{ position: 'absolute', top: '-1px', left: '-1px', background: 'var(--accent-color)', color: 'var(--bg-color)', padding: '0.2rem', borderBottomRightRadius: '2px' }}>
-           <Pin fill="currentColor" size={12} />
-         </div>
-      ) : null}
-      
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', marginLeft: isPinned ? '1.5rem' : '0' }}>
-          <span style={{ fontSize: '1.2rem'}}>{TYPE_ICONS[item.type] || '📄'}</span>
-          <span className="meta-text" style={{ color: 'var(--text-muted)' }}>{item.type}</span>
+        <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
+          <span style={{ fontSize: '1.2rem', padding: '0.4rem', borderRadius: '10px', background: 'rgba(255,255,255,0.03)' }}>
+            {TYPE_ICONS[item.type] || '📄'}
+          </span>
+          <span className="meta-text" style={{ fontSize: '0.65rem' }}>{item.type}</span>
         </div>
+        
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           {item.similarity && (
-             <span className="meta-text" style={{ color: 'var(--accent-color)', fontWeight: 'bold' }}>
+             <span className="meta-text" style={{ color: 'var(--accent)', fontWeight: 'bold' }}>
                {(item.similarity * 100).toFixed(0)}% MATCH
              </span>
           )}
-          <span className="meta-text" style={{ color: 'var(--text-muted)'}}>{date}</span>
+          <span className="meta-text" style={{ fontSize: '0.65rem' }}>{date}</span>
           <button 
              onClick={handlePin} 
              style={{ 
-                color: isPinned ? 'var(--accent-color)' : 'var(--text-muted)', 
-                opacity: isPinned ? 1 : 0.5, 
+                color: isPinned ? 'var(--accent)' : 'var(--text-muted)', 
+                opacity: isPinned ? 1 : 0.6, 
                 transition: 'all 0.2s', 
-                padding: '0.2rem',
+                padding: '0.3rem',
                 cursor: 'pointer',
-                background: 'transparent',
+                background: 'rgba(255,255,255,0.03)',
+                borderRadius: '8px',
                 border: 'none',
                 display: 'flex',
                 alignItems: 'center'
              }} 
-             onMouseEnter={e => e.currentTarget.style.opacity = 1} 
-             onMouseLeave={e => e.currentTarget.style.opacity = isPinned ? 1 : 0.5}
           >
-            <Pin size={16} />
+            <Pin size={14} fill={isPinned ? 'var(--accent)' : 'none'} />
           </button>
         </div>
       </div>
 
-      <h3 style={{ fontSize: '1.25rem', lineHeight: 1.4, margin: '0.5rem 0' }}>{item.title}</h3>
+      <div>
+        <h3 style={{ fontSize: '1.1rem', fontWeight: 600, lineHeight: 1.4, color: 'var(--text-primary)', marginBottom: '0.4rem' }}>
+          {item.title}
+        </h3>
+        {item.content && (
+          <p style={{ 
+            color: 'var(--text-secondary)', 
+            fontSize: '0.85rem', 
+            lineHeight: 1.5, 
+            overflow: 'hidden', 
+            display: '-webkit-box', 
+            WebkitLineClamp: 2, 
+            WebkitBoxOrient: 'vertical' 
+          }}>
+            {item.content}
+          </p>
+        )}
+      </div>
 
-      {item.content && (
-        <p style={{ color: '#A0A0A0', fontSize: '0.9rem', lineHeight: 1.6, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
-          {item.content}
-        </p>
-      )}
-
-      {item.tags && item.tags.length > 0 && (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: 'auto' }}>
-          {item.tags.slice(0, 3).map(tag => (
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', paddingTop: '0.4rem' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+          {item.tags && item.tags.slice(0, 3).map(tag => (
             <span key={tag} className="tag-badge">#{tag}</span>
           ))}
-          {item.tags.length > 3 && <span className="tag-badge">+{item.tags.length - 3}</span>}
+          {item.tags && item.tags.length > 3 && (
+            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', alignSelf: 'center' }}>
+              +{item.tags.length - 3} more
+            </span>
+          )}
         </div>
-      )}
+        
+        <div className="btn-outline" style={{ padding: '0.3rem', borderRadius: '8px', border: 'none', opacity: 0, transition: 'opacity 0.2s' }} id="hover-reveal">
+           <ExternalLink size={14} />
+        </div>
+      </div>
+      
+      <style>{`
+        .item-card:hover #hover-reveal { opacity: 0.8 !important; }
+      `}</style>
     </div>
   );
 }
