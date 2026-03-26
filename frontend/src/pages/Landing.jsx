@@ -10,33 +10,33 @@ export default function Landing() {
       alignItems: 'center', 
       justifyContent: 'center',
       textAlign: 'center',
-      padding: '4rem 2rem'
+      padding: '2rem 1rem'
     }}>
       {/* Background Glow */}
       <div style={{ 
         position: 'absolute', 
-        top: '20%', 
+        top: '15%', 
         left: '50%', 
         transform: 'translateX(-50%)', 
-        width: '600px', 
-        height: '600px', 
-        background: 'radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%)', 
+        width: 'min(90vw, 600px)', 
+        height: 'min(90vw, 600px)', 
+        background: 'radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, transparent 70%)', 
         zIndex: -1,
         borderRadius: '50%',
-        filter: 'blur(100px)'
+        filter: 'blur(80px)'
       }} />
 
-      <div style={{ marginBottom: '5rem', position: 'relative' }}>
+      <div style={{ marginBottom: '4rem', position: 'relative', width: '100%', maxWidth: '1100px' }}>
         <div style={{ 
           display: 'inline-flex', 
           alignItems: 'center', 
           gap: '8px', 
-          padding: '0.4rem 1.2rem', 
+          padding: '0.5rem 1.25rem', 
           borderRadius: '50px', 
-          background: 'rgba(124,58,237,0.1)', 
-          border: '1px solid rgba(124,58,237,0.2)', 
+          background: 'rgba(124,58,237,0.08)', 
+          border: '1px solid rgba(124,58,237,0.15)', 
           color: 'var(--accent)', 
-          fontSize: '0.85rem', 
+          fontSize: 'min(0.85rem, 3.5vw)', 
           fontWeight: 600,
           marginBottom: '2rem'
         }}>
@@ -44,38 +44,40 @@ export default function Landing() {
         </div>
 
         <h1 style={{ 
-          fontSize: 'clamp(3rem, 8vw, 6.5rem)', 
+          fontSize: 'clamp(2.5rem, 10vw, 6.5rem)', 
           fontWeight: '700', 
           letterSpacing: '-0.04em', 
-          lineHeight: 0.9, 
+          lineHeight: 0.95, 
           background: 'linear-gradient(to bottom right, #fff 40%, #71717a 100%)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           marginBottom: '2rem',
-          maxWidth: '1000px'
+          marginRight: 'auto',
+          marginLeft: 'auto'
         }}>
-          Capture Everything. <br /> Find it Instantly.
+          Capture Everything. <br className="hide-on-mobile" /> Find it Instantly.
         </h1>
         
         <p style={{ 
-          fontSize: 'clamp(1rem, 2vw, 1.4rem)', 
+          fontSize: 'clamp(1rem, 2.5vw, 1.3rem)', 
           color: 'var(--text-secondary)', 
-          maxWidth: '750px', 
+          maxWidth: '800px', 
           margin: '0 auto 3rem',
           lineHeight: 1.6,
-          fontWeight: 400
+          fontWeight: 400,
+          padding: '0 1rem'
         }}>
           Not just another bookmark manager. A high-performance personal knowledge engine 
           that understands your thoughts using vector-semantic search.
         </p>
         
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', padding: '0 1rem' }}>
           <SignInButton mode="modal">
-            <button className="btn-primary" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', borderRadius: '50px' }}>
+            <button className="btn-primary" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', borderRadius: '50px', minWidth: '200px' }}>
               GET STARTED <ArrowRight size={18} />
             </button>
           </SignInButton>
-          <button className="btn-outline" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', borderRadius: '50px', backdropFilter: 'blur(10px)' }}>
+          <button className="btn-outline" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', borderRadius: '50px', backdropFilter: 'blur(10px)', minWidth: '200px' }}>
             WATCH DEMO
           </button>
         </div>
@@ -83,11 +85,12 @@ export default function Landing() {
 
       <div style={{ 
         display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
         gap: '2rem', 
         maxWidth: '1200px', 
         width: '100%',
-        marginTop: '2rem'
+        marginTop: '2rem',
+        padding: '0 1rem'
       }}>
         <FeatureCard 
           icon={<Zap size={32} color="var(--accent)" />} 
@@ -106,7 +109,7 @@ export default function Landing() {
         />
       </div>
 
-      <footer style={{ marginTop: '8rem', color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '2rem' }}>
+      <footer style={{ marginTop: '8rem', color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '2rem', padding: '0 1rem' }}>
         © 2026 MINDVAULT. NO DATA SOLD. NO ADS. EVER.
       </footer>
     </div>
