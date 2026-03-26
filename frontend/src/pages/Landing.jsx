@@ -71,15 +71,12 @@ export default function Landing() {
           that understands your thoughts using vector-semantic search.
         </p>
         
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', padding: '0 1rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '0 1rem' }}>
           <SignInButton mode="modal">
-            <button className="btn-primary" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', borderRadius: '50px', minWidth: '200px' }}>
-              GET STARTED <ArrowRight size={18} />
+            <button className="btn-primary" style={{ padding: '1.2rem 3.5rem', fontSize: '1.2rem', borderRadius: '50px', minWidth: '280px', boxShadow: '0 20px 40px -10px var(--accent-glow)' }}>
+              GET STARTED <ArrowRight size={22} />
             </button>
           </SignInButton>
-          <button className="btn-outline" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', borderRadius: '50px', backdropFilter: 'blur(10px)', minWidth: '200px' }}>
-            WATCH DEMO
-          </button>
         </div>
       </div>
 
